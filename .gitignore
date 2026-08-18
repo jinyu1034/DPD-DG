@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Training outputs
+code/utils/attention_maps/
+code/utils/confusion_matrix/
+code/utils/t-SNE/
+code/utils/dynamical_pseudo-labels/
+
+# Large raw datasets (avoid GitHub 100MB file limit)
+*.mat
+
+# Optional notebooks/checkpoints
+.ipynb_checkpoints/
