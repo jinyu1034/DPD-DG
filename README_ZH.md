@@ -16,7 +16,7 @@
 本项目为发表于 Elsevier 权威期刊 **《Applied Soft Computing》** 的学术论文官方开源代码仓库：
 
 > **论文题目**: DPD-DG: Dual-physics-driven domain generalization network for rotating machinery fault diagnosis under variable working conditions  
-> **作者**: Pengfei Xu , Jinyu Zhao , Jinping Liu , Yimei Yang , Haidong Shao
+> **作者**: Pengfei Xu (徐鹏飞), Jinyu Zhao (赵锦宇), Jinping Liu (刘金平), Yimei Yang (杨依枚), Haidong Shao (邵海东)  
 > **发表期刊**: *Applied Soft Computing*, Volume 116218, 2026.  
 > 🔗 **DOI 直链**: [https://doi.org/10.1016/j.asoc.2026.116218](https://doi.org/10.1016/j.asoc.2026.116218)  
 > 📄 **ScienceDirect 官方页面**: [https://www.sciencedirect.com/science/article/abs/pii/S1568494626016662](https://www.sciencedirect.com/science/article/abs/pii/S1568494626016662)
@@ -204,28 +204,46 @@ python code/run_6datasets_4tasks_SeekDPDBestParameters.py
 
 ---
 
-## 📈 结果可视化与可解释性分析
+## 📈 结果可视化与物理可解释性分析
 
-项目内置了丰富的可解释性分析与图表绘制工具：
+本项目提供了全面的可视化与物理可解释性工具，分为 **测试期在线绘图（命令行参数控制）** 与 **离线日志后处理（独立 Python 脚本运行）** 两部分：
 
-1. **t-SNE 特征空间对齐分布图 & J-Score（类间/类内距离比）**：
+### 1. 测试期在线可视化（通过命令行参数控制）
+
+在模型训练与测试阶段（`code/main.py` 或 `code/run_single.py`），可通过传入布尔参数控制是否在测试评估阶段自动绘制并保存高分辨率学术级图表：
+
+| 命令行参数 | 默认值 | 输出目录 | 功能说明 |
+| :--- | :--- | :--- | :--- |
+| `--save_tsne True` | `False` | `code/utils/t-SNE/` | 绘制源域与目标域特征空间对齐散点图，并计算 **$J$-Score**（类间/类内散布比，Fisher 准则）以及 $S_e, S_a$ 统计量。 |
+| `--save_cm True` | `False` | `code/utils/confusion_matrix/` | 生成归一化混淆矩阵热力图，展示各故障类别的识别准确率与样本百分比分布。 |
+| `--save_attention True` | `False` | `code/utils/attention_maps/` | 针对 `DPD_DG` 模型绘制类别维度的 48 维物理先验特征注意力权重分布热力图，并自动导出对应的 Excel 表格（`.xlsx`）。 |
+
+**运行示例：**
+```bash
+python code/main.py \
+    --dataset_name BJUT_Gear \
+    --target_id 40hz \
+    --source_id_list 20hz 30hz 50hz \
+    --model_name DPD_DG \
+    --save_tsne True \
+    --save_cm True \
+    --save_attention True
+```
+
+### 2. 离线日志后处理与分析（通过独立 Python 脚本运行）
+
+在运行完训练或网格搜索并生成实验日志（`.log`）后，通过独立脚本对日志文件进行深度统计与可视化：
+
+1. **动态伪标签演化分析 (Dynamic Pseudo-Label Evolution)**：
+   解析训练日志中的置信度筛选量（Hard Pseudo Count）、物理一致性校验量（Physics Pass Count）及对应错误率，绘制自训练过程中的样本留存率与准确率演化曲线：
    ```bash
-   python code/utils/save_t_sne.py
+   python "code/utils/dynamical_pseudo-labels/plot_prior_metrics copy.py"
    ```
-2. **混淆矩阵 (Confusion Matrix)**：
+
+2. **3D 超参数敏感性响应曲面 (3D Sensitivity Surfaces)**：
+   扫描参数网格搜索生成的日志文件夹，提取置信度阈值（`threshold`）与物理一致性阈值（`physics_thresh`）对目标域准确率（`Mean_Acc`）的影响，通过双三次插值绘制三维学术响应曲面图：
    ```bash
-   python code/utils/save_confusion_matrix.py
-   ```
-3. **物理特征注意力热力图 (Attention Heatmap)**：
-   ```bash
-   python code/utils/save_attention_heatmap.py
-   ```
-4. **动态伪标签演化曲线（硬阈值 vs 物理校验过滤量与错误率）**：
-   ```bash
-   python code/utils/dynamical_pseudo-labels/plot_prior_metrics\ copy.py
-   ```
-5. **3D 超参数敏感性响应曲面**：
-   ```bash
+   # 以 CWRU 轴承数据集为例：
    python code/utils/Parameter_Sensitivity/CWRU_Bearing/visualize_3d_sensitivity.py
    ```
 
@@ -258,5 +276,5 @@ python code/run_6datasets_4tasks_SeekDPDBestParameters.py
 ## 🤝 交流与反馈 (Contact)
 
 如有任何问题、建议或学术合作意向，欢迎在 GitHub 提交 Issue 或联系作者：
-- **** / **** (`jinyu1034`)
+- **徐鹏飞** / **赵锦宇** (`jinyu1034`)
 - GitHub 仓库: [https://github.com/jinyu1034/DPD-DG](https://github.com/jinyu1034/DPD-DG)

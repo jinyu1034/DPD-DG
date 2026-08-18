@@ -1,5 +1,7 @@
 # DPD-DG: Dual-Physics-Driven Domain Generalization Network for Rotating Machinery Fault Diagnosis under Variable Working Conditions
 
+[English](README.md) | [中文说明](README_ZH.md)
+
 [![Paper](https://img.shields.io/badge/Paper-ScienceDirect-blue.svg)](https://www.sciencedirect.com/science/article/abs/pii/S1568494626016662)
 [![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.asoc.2026.116218-brightgreen.svg)](https://doi.org/10.1016/j.asoc.2026.116218)
 [![Journal](https://img.shields.io/badge/Journal-Applied%20Soft%20Computing-orange.svg)](https://www.sciencedirect.com/journal/applied-soft-computing)
@@ -184,33 +186,44 @@ python code/run_6datasets_4tasks_SeekDPDBestParameters.py
 
 ## 📈 Visualizations & Interpretability
 
-The repository includes ready-to-use visualization tools to analyze model performance and physical interpretability:
+The repository provides comprehensive visualization and physical interpretability tools, categorized into **online evaluation flags** (controlled via CLI arguments during testing) and **offline post-processing scripts** (analyzing generated logs):
 
-1. **t-SNE Feature Alignment**:
+### 1. Online Visualizations (Controlled via CLI Arguments)
+
+Enable these flags in `code/main.py` or `code/run_single.py` during training/testing to automatically generate and save publication-ready figures:
+
+| CLI Argument | Default | Output Directory | Description |
+| :--- | :--- | :--- | :--- |
+| `--save_tsne True` | `False` | `code/utils/t-SNE/` | Plots inter-domain feature space alignment (Source vs. Target) and calculates the **$J$-Score** ($S_b / S_w$, Fisher criterion) along with scatter matrices. |
+| `--save_cm True` | `False` | `code/utils/confusion_matrix/` | Generates normalized confusion matrix heatmaps showing classification percentages and overall test accuracy. |
+| `--save_attention True` | `False` | `code/utils/attention_maps/` | Visualizes the class-wise attention weights over 48 physical statistical indicators (SPA module for `DPD_DG`) and exports the attention table to an `.xlsx` spreadsheet. |
+
+**Example Command:**
+```bash
+python code/main.py \
+    --dataset_name BJUT_Gear \
+    --target_id 40hz \
+    --source_id_list 20hz 30hz 50hz \
+    --model_name DPD_DG \
+    --save_tsne True \
+    --save_cm True \
+    --save_attention True
+```
+
+### 2. Offline Analysis & Post-Processing (Standalone Python Scripts)
+
+Run these standalone scripts on experimental logs (`.log`) generated in `results/` or utility directories:
+
+1. **Dynamic Pseudo-Label Evolution Curves**:
+   Analyzes self-training pseudo-label progression (retention ratio, error rate, and rejected noisy samples violating physical consistency across epochs):
    ```bash
-   python code/utils/save_t_sne.py
+   python "code/utils/dynamical_pseudo-labels/plot_prior_metrics copy.py"
    ```
-   Visualizes inter-domain feature clustering and computes the Fisher separation metric ($J$-Score).
 
-2. **Confusion Matrix**:
+2. **3D Hyperparameter Sensitivity Response Surfaces**:
+   Parses grid search logs for pseudo-label threshold (`threshold`) vs. physical consistency threshold (`physics_thresh`) against target accuracy (`Mean_Acc`), plotting 3D publication surfaces via bicubic interpolation:
    ```bash
-   python code/utils/save_confusion_matrix.py
-   ```
-
-3. **Physics Attention Heatmaps**:
-   ```bash
-   python code/utils/save_attention_heatmap.py
-   ```
-   Inspects how the Shared Physics-Aware Attention module attends to specific physical statistical indicators (e.g., RMS, Kurtosis, Crest Factor) for various fault categories.
-
-4. **Dynamic Pseudo-label Evolution**:
-   ```bash
-   python code/utils/dynamical_pseudo-labels/plot_prior_metrics\ copy.py
-   ```
-   Analyzes pseudo-label accuracy and the rejection rate of physically inconsistent samples over training epochs.
-
-5. **3D Parameter Sensitivity Surfaces**:
-   ```bash
+   # Example for CWRU Bearing dataset:
    python code/utils/Parameter_Sensitivity/CWRU_Bearing/visualize_3d_sensitivity.py
    ```
 
