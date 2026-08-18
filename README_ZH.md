@@ -16,7 +16,7 @@
 本项目为发表于 Elsevier 权威期刊 **《Applied Soft Computing》** 的学术论文官方开源代码仓库：
 
 > **论文题目**: DPD-DG: Dual-physics-driven domain generalization network for rotating machinery fault diagnosis under variable working conditions  
-> **作者**: Pengfei Xu (徐鹏飞), Jinyu Zhao (赵锦宇), Jinping Liu (刘金平), Yimei Yang (杨依枚), Haidong Shao (邵海东)  
+> **作者**: Pengfei Xu , Jinyu Zhao , Jinping Liu , Yimei Yang , Haidong Shao
 > **发表期刊**: *Applied Soft Computing*, Volume 116218, 2026.  
 > 🔗 **DOI 直链**: [https://doi.org/10.1016/j.asoc.2026.116218](https://doi.org/10.1016/j.asoc.2026.116218)  
 > 📄 **ScienceDirect 官方页面**: [https://www.sciencedirect.com/science/article/abs/pii/S1568494626016662](https://www.sciencedirect.com/science/article/abs/pii/S1568494626016662)
@@ -258,5 +258,5 @@ python code/run_6datasets_4tasks_SeekDPDBestParameters.py
 ## 🤝 交流与反馈 (Contact)
 
 如有任何问题、建议或学术合作意向，欢迎在 GitHub 提交 Issue 或联系作者：
-- **徐鹏飞** / **赵锦宇** (`jinyu1034`)
+- **** / **** (`jinyu1034`)
 - GitHub 仓库: [https://github.com/jinyu1034/DPD-DG](https://github.com/jinyu1034/DPD-DG)
